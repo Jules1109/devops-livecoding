@@ -1,28 +1,26 @@
 name: CI devops 2024
 on:
-  #to begin you want to launch this job in main and develop
+  # Lancement sur les branches main et lors des pull requests
   push:
-    branches: main
+    branches: 
+      - main
   pull_request:
 
 jobs:
   test-backend: 
     runs-on: ubuntu-22.04
     steps:
-     #checkout your github code using actions/checkout@v2.5.0
+      # Checkout du code source
       - uses: actions/checkout@v2.5.0
 
-     #do the same with another action (actions/setup-java@v3) that enable to setup jdk 17
+      # Configuration de JDK 17
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: "17"
           distribution: "temurin"
 
-      - name: navigate to backend
-        run: cd simple-api
-
-
-     #finally build your app with the latest command
+      # Build et tests avec Maven dans le répertoire simple-api
       - name: Build and test with Maven
         run: mvn clean verify
+        working-directory: simple-api
