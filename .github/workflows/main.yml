@@ -19,8 +19,8 @@ jobs:
           java-version: "17"
           distribution: "temurin"
 
-      -name: navigate to backend
-       run: cd simple-api
+      - name: navigate to backend
+        run: cd simple-api
 
 
      #finally build your app with the latest command
