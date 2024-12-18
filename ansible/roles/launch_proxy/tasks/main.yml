@@ -1,0 +1,40 @@
+---
+- name: Pull HTTPD image
+  docker_image:
+    name: httpd
+    source: pull
+
+- name: Create a basic HTTPD configuration
+  copy:
+    content: |
+      # Chargement des modules nécessaires
+      LoadModule mpm_event_module modules/mod_mpm_event.so
+      LoadModule log_config_module modules/mod_log_config.so
+
+      # Configuration de base
+      ServerRoot "/usr/local/apache2"
+      Listen 80
+
+      # Définir la racine des documents
+      DocumentRoot "/usr/local/apache2/htdocs"
+      <Directory "/usr/local/apache2/htdocs">
+          Options Indexes FollowSymLinks
+          AllowOverride None
+          Require all granted
+      </Directory>
+
+      # Fichiers de log
+      ErrorLog /usr/local/apache2/logs/error.log
+      LogLevel warn
+      CustomLog /usr/local/apache2/logs/access.log combined
+    dest: /tmp/httpd.conf
+
+- name: Run proxy container with updated configuration
+  docker_container:
+    name: my_proxy
+    image: httpd:latest
+    state: started
+    ports:
+      - "80:80"
+    volumes:
+      - "/tmp/httpd.conf:/usr/local/apache2/conf/httpd.conf:ro"

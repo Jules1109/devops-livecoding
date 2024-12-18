@@ -1,0 +1,12 @@
+- name: Launch Postgres container with custom image
+  community.docker.docker_container:
+    name: postgres_db
+    image: ed1109/tp-devops-database:latest  # Remplacez par votre image
+    env:
+      POSTGRES_DB: db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pwd
+    ports:
+      - "5432:5432"
+    state: started
+    restart_policy: always
